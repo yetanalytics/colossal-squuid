@@ -3,11 +3,11 @@
                       [com.yetanalytics.squuid.clj.time :as t])
             (:import [java.time Instant])]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; UUIDs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
+;; for v8 UUIDS:
+;; https://datatracker.ietf.org/doc/html/draft-peabody-dispatch-new-uuid-format
 
-;; The overall approach of generating a 48-bit timestamp and merging it into
+;; The original approach of generating a 48-bit timestamp and merging it into
 ;; a v4 UUID is taken from the Laravel PHP library's orderedUuid function:
 ;; https://itnext.io/laravel-the-mysterious-ordered-uuid-29e7500b4f8
 
@@ -50,9 +50,11 @@
         uuid-lsb  (u/uuid-lsb uuid)
         ;; Timestamp
         ts-long   (t/time->millis ts)
-        ;; Putting it all together
-        uuid-msb' (bit-or (bit-shift-left ts-long 16)
-                          (bit-and bit-mask-16 uuid-msb))
+        ;; Putting it all together (and change version from v4 to v8)
+        uuid-msb' (-> (bit-or (bit-shift-left ts-long 16)
+                              (bit-and bit-mask-16 uuid-msb))
+                      (bit-clear 14)
+                      (bit-set 15))
         squuid    (u/bytes->uuid uuid-msb' uuid-lsb)]
     {:base-uuid uuid
      :squuid    squuid}))
@@ -66,13 +68,13 @@
 
 (defn generate-squuid*
   "Return a map containing the following:
-   :squuid     The sequential UUID made up of a base UUID and timestamp.
+   :squuid     The v8 sequential UUID made up of a base UUID and timestamp.
    :base-uuid  The base v4 UUID that provides the lower 80 bits.
    :timestamp  The timestamp that provides the higher 48 bits.
    
    The sequential UUIDs have 7 reserved bits from the RFC 4122 standard;
-   4 for the UUID version and 3 for the UUID variant. This leaves 73 random
-   bits, allowing for about 9.4 sextillion random segments.
+   4 for the UUID version and 2 for the UUID variant. This leaves 74 random
+   bits, allowing for about 18.9 sextillion random segments.
    
    The timestamp is coerced to millisecond resolution. Due to the 48 bit
    maximum on the timestamp, the latest time supported is February 11, 10332.
@@ -80,7 +82,8 @@
    In case that this function is called multiple times in the same millisecond,
    subsequent SQUUIDs are created by incrementing the base UUID and thus the
    random segment of the SQUUID. An exception is thrown in the unlikely case
-   where all 73 random bits are 1s and incrementing can no longer occur."
+   where all 72 (non-variant) random bits are 1s and incrementing can no
+   longer occur."
   []
   (let [ts (t/current-time)
         {:keys [timestamp]} @current-time-atom]
@@ -97,23 +100,20 @@
                                      (merge (make-squuid ts))))))))
 
 (defn generate-squuid
-  "Return a new sequential UUID, or SQUUID. The most significant 48 bits
+  "Return a new v8 sequential UUID, or SQUUID. The most significant 48 bits
    are created from a timestamp representing the current time, which always
    increments, enforcing sequentialness. See `generate-squuid*` for more
    details."
   []
   (:squuid (generate-squuid*)))
 
-;; TODO: These are labeled as Version 1 UUIDs but actually don't conform to
-;; the spec. Either we conform to the spec or we dispense with the version
-;; numbers altogether (and ditch xapi-schema's UUID regex).
 (defn time->uuid
   "Convert a java.util.Instant timestamp to a UUID. The upper 48 bits represent
-   the timestamp, while the lower 80 bits are `1FFF-1FFF-FFFFFFFFFFFF`."
+   the timestamp, while the lower 80 bits are `1FFF-8FFF-FFFFFFFFFFFF`."
   [^Instant ts]
   (let [ts-long  (t/time->millis ts)
         uuid-msb (bit-or (bit-shift-left ts-long 16)
-                         0x1FFF)
-        uuid-lsb (bit-or (bit-shift-left 0x1FFF 48)
+                         0x8FFF)
+        uuid-lsb (bit-or (bit-shift-left 0x8FFF 48)
                          bit-mask-48)]
     (u/bytes->uuid uuid-msb uuid-lsb)))
