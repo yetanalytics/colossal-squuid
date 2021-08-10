@@ -1,7 +1,7 @@
 (ns com.yetanalytics.squuid
-  #?@(:clj [(:require [com.yetanalytics.squuid.clj.uuid :as u]
-                      [com.yetanalytics.squuid.clj.time :as t])
-            (:import [java.time Instant])]))
+  (:require [com.yetanalytics.squuid.clj.uuid :as u]
+            [com.yetanalytics.squuid.clj.time :as t])
+  (:import [java.time Instant]))
 
 ;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
 ;; for v8 UUIDS:
