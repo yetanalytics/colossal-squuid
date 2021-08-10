@@ -1,4 +1,4 @@
-(ns com.yetanalytics.squuid.clj.uuid
+(ns com.yetanalytics.squuid.uuid
   (:import [java.util UUID]))
 
 (set! *warn-on-reflection* true)

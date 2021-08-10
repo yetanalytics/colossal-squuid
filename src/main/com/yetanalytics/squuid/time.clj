@@ -1,4 +1,4 @@
-(ns com.yetanalytics.squuid.clj.time
+(ns com.yetanalytics.squuid.time
   (:import [java.time Instant]))
 
 (set! *warn-on-reflection* true)
