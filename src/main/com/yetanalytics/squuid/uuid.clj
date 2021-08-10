@@ -28,4 +28,21 @@
   [^Long msb ^Long lsb]
   (UUID. msb lsb))
 
+;; uuid<, uuid=, and uuid> from clj-uuid
+
+(defn before?
+  "Does `uuid1?` come before `uuid2`?"
+  [^UUID uuid1 ^UUID uuid2]
+  (neg-int? (.compareTo uuid1 uuid2)))
+
+(defn equals?
+  "Does `uuid1?` equal `uuid2`?"
+  [^UUID uuid1 ^UUID uuid2]
+  (zero? (.compareTo uuid1 uuid2)))
+
+(defn after?
+  "Does `uuid1?` come after `uuid2`?"
+  [^UUID uuid1 ^UUID uuid2]
+  (pos-int? (.compareTo uuid1 uuid2)))
+
 (set! *warn-on-reflection* false)

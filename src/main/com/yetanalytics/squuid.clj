@@ -1,5 +1,6 @@
 (ns com.yetanalytics.squuid
-  (:require [com.yetanalytics.squuid.uuid :as u]
+  (:require [clojure.spec.alpha :as s]
+            [com.yetanalytics.squuid.uuid :as u]
             [com.yetanalytics.squuid.time :as t])
   (:import [java.time Instant]))
 
@@ -66,6 +67,14 @@
            :base-uuid (u/zero-uuid)
            :squuid    (u/zero-uuid)}))
 
+(s/def ::base-uuid uuid?)
+(s/def ::squuid uuid?)
+(s/def ::timestamp inst?)
+
+(s/fdef generate-squuid*
+  :args (s/cat)
+  :ret (s/keys :req-un [::base-uuid ::timestamp ::squuid]))
+
 (defn generate-squuid*
   "Return a map containing the following:
    :squuid     The v8 sequential UUID made up of a base UUID and timestamp.
@@ -98,6 +107,10 @@
                                  (-> m
                                      (assoc :timestamp ts)
                                      (merge (make-squuid ts))))))))
+
+(s/fdef generate-squuid
+  :args (s/cat)
+  :ret ::squuid)
 
 (defn generate-squuid
   "Return a new v8 sequential UUID, or SQUUID. The most significant 48 bits
