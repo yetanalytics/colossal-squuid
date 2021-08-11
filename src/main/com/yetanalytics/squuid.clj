@@ -2,7 +2,7 @@
   (:require [clojure.spec.alpha :as s]
             [com.yetanalytics.squuid.uuid :as u]
             [com.yetanalytics.squuid.time :as t])
-  (:import [java.time Instant]))
+  (:import [java.util Date]))
 
 ;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
 ;; for v8 UUIDS:
@@ -16,49 +16,9 @@
 ;; is taken from the ULID specification:
 ;; https://github.com/ulid/spec
 
-(def ^{:private true :const true} bit-mask-12
-  (unchecked-long 0x0000000000000FFF))
-(def ^{:private true :const true} bit-mask-16
-  (unchecked-long 0x000000000000FFFF))
-(def ^{:private true :const true} bit-mask-48
-  (unchecked-long 0x0000FFFFFFFFFFFF))
-(def ^{:private true :const true} bit-mask-61
-  (unchecked-long 0x1FFFFFFFFFFFFFFF))
-
-(defn- inc-uuid
-  [uuid]
-  (let [uuid-msb (u/uuid-msb uuid)
-        uuid-lsb (u/uuid-lsb uuid)]
-    (cond
-      ;; least significant bits not maxed out
-      (not (zero? (bit-and-not bit-mask-61 uuid-lsb)))
-      (u/bytes->uuid uuid-msb (inc uuid-lsb))
-      ;; most significant bits not maxed out
-      (not (zero? (bit-and-not bit-mask-12 uuid-msb)))
-      (u/bytes->uuid (inc uuid-msb) uuid-lsb)
-      ;; oh no
-      :else
-      (throw (ex-info (format "Cannot increment UUID %s any further."
-                              uuid)
-                      {:type ::exceeded-max-uuid-node
-                       :uuid uuid})))))
-
-(defn- make-squuid
-  [ts]
-  (let [;; Base UUID
-        uuid      (u/rand-uuid)
-        uuid-msb  (u/uuid-msb uuid)
-        uuid-lsb  (u/uuid-lsb uuid)
-        ;; Timestamp
-        ts-long   (t/time->millis ts)
-        ;; Putting it all together (and change version from v4 to v8)
-        uuid-msb' (-> (bit-or (bit-shift-left ts-long 16)
-                              (bit-and bit-mask-16 uuid-msb))
-                      (bit-clear 14)
-                      (bit-set 15))
-        squuid    (u/bytes->uuid uuid-msb' uuid-lsb)]
-    {:base-uuid uuid
-     :squuid    squuid}))
+(s/def ::base-uuid uuid?)
+(s/def ::squuid uuid?)
+(s/def ::timestamp inst?)
 
 ;; The atom is private so that only generate-squuid(*) can mutate it.
 ;; Note that merging Instant/EPOCH with v0 UUID returns the v0 UUID again.
@@ -66,10 +26,6 @@
     (atom {:timestamp (t/zero-time)
            :base-uuid (u/zero-uuid)
            :squuid    (u/zero-uuid)}))
-
-(s/def ::base-uuid uuid?)
-(s/def ::squuid uuid?)
-(s/def ::timestamp inst?)
 
 (s/fdef generate-squuid*
   :args (s/cat)
@@ -100,13 +56,13 @@
       ;; Timestamp clash - increment UUIDs
       (swap! current-time-atom (fn [m]
                                  (-> m
-                                     (update :base-uuid inc-uuid)
-                                     (update :squuid inc-uuid))))
+                                     (update :base-uuid u/inc-uuid)
+                                     (update :squuid u/inc-uuid))))
       ;; No timestamp clash - make new UUIDs
       (swap! current-time-atom (fn [m]
                                  (-> m
                                      (assoc :timestamp ts)
-                                     (merge (make-squuid ts))))))))
+                                     (merge (u/make-squuid ts))))))))
 
 (s/fdef generate-squuid
   :args (s/cat)
@@ -120,13 +76,14 @@
   []
   (:squuid (generate-squuid*)))
 
+(s/fdef time->uuid
+  :args (s/cat :ts inst?)
+  :ret ::squuid)
+
 (defn time->uuid
-  "Convert a java.util.Instant timestamp to a UUID. The upper 48 bits represent
-   the timestamp, while the lower 80 bits are `1FFF-8FFF-FFFFFFFFFFFF`."
-  [^Instant ts]
-  (let [ts-long  (t/time->millis ts)
-        uuid-msb (bit-or (bit-shift-left ts-long 16)
-                         0x8FFF)
-        uuid-lsb (bit-or (bit-shift-left 0x8FFF 48)
-                         bit-mask-48)]
-    (u/bytes->uuid uuid-msb uuid-lsb)))
+  "Convert a timestamp to a UUID. The upper 48 bits represent
+   the timestamp, while the lower 80 bits are `8FFF-8FFF-FFFFFFFFFFFF`."
+  [ts]
+  (let [ts (if (instance? Date ts) (.toInstant ts) ts)]
+    (:squuid
+     (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF"))))

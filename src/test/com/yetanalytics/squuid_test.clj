@@ -7,7 +7,8 @@
 (deftest squuid-test
   (testing "squuid gentests"
     (is (nil? (check-validate `squuid/generate-squuid*)))
-    (is (nil? (check-validate `squuid/generate-squuid))))
+    (is (nil? (check-validate `squuid/generate-squuid)))
+    (is (nil? (check-validate `squuid/time->uuid))))
   (testing "squuid monotonicity"
     (is
      (loop [squuid-seq  (repeatedly 10000 squuid/generate-squuid)
