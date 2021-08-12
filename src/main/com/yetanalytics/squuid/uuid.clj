@@ -101,4 +101,12 @@
      {:base-uuid uuid
       :squuid    squuid})))
 
+(defn compare-uuid
+  "Return:
+   - (< uuid1 uuid2): -1
+   - (= uuid1 uuid2): 0
+   - (> uuid1 uuid2): 1"
+  [uuid1 uuid2]
+  (.compareTo uuid1 uuid2))
+
 (set! *warn-on-reflection* false)
