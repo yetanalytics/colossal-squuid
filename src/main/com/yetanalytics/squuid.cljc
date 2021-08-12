@@ -89,15 +89,3 @@
               :cljs ts)]
     (:squuid
      (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF"))))
-
-(comment
-  (u/inc-uuid #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF")
-  (t/after? #inst "2021-08-12T13:45:20.214-00:00"
-            #inst "1970-01-01T00:00:00.000-00:00")
-  
-  (-> {:timestamp #inst "1970-01-01T00:00:00.000-00:00"
-       :base-uuid #uuid "00000000-0000-0000-0000-000000000000"
-       :squuid #uuid "00000000-0000-0000-0000-000000000000"}
-      (assoc :timestamp #inst "2021-08-12T13:45:20.214-00:00")
-      (merge (u/make-squuid #inst "2021-08-12T13:45:20.214-00:00")))
-  )

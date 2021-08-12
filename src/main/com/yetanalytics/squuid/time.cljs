@@ -29,4 +29,4 @@
 
 (defn time->millis
   [i]
-  (js/Date.parse i))
+  (.valueOf i))

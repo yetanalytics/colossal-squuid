@@ -2,16 +2,19 @@
   (:require [clojure.string :refer [join]]
             [com.yetanalytics.squuid.time :as t]))
 
+(def ^:private hex-bitsize (js/BigInt 4))
+(def ^:private hex-bitmask (js/BigInt 0xF))
+
 (defn- bytes->hex-seq
   [byts num-hex]
   (loop [byts byts
          hlen num-hex
          hseq '()]
     (if-not (<= hlen 0)
-      (recur (bit-shift-right byts 4)
+      (recur (bit-shift-right byts hex-bitsize)
              (dec hlen)
-             (cons (bit-and byts 0xF) hseq))
-      hseq)))
+             (cons (bit-and byts hex-bitmask) hseq))
+      (map #(js/Number %) hseq))))
 
 (defn- uuid->hex-seq
   [u]
@@ -66,7 +69,7 @@
 
 (defn- make-squuid*
   [ts u]
-  (let [ts'       (t/time->millis ts)
+  (let [ts'       (js/BigInt (t/time->millis ts))
         [msb lsb] (split-at 16 u)
         msb'      (concat (bytes->hex-seq ts' 12)
                           '(8)
@@ -88,8 +91,8 @@
 
 (defn make-squuid
   ([ts]
-   (let [raw-base (rand-uuid-raw)
-         raw-squuid (make-squuid* ts raw-base)
+   (let [raw-base      (rand-uuid-raw)
+         raw-squuid    (make-squuid* ts raw-base)
          cooked-squuid (hex-seq->uuid raw-squuid)]
      {:base-uuid (hex-seq->uuid raw-base)
       :squuid    cooked-squuid}))
@@ -118,8 +121,3 @@
     (< u1 u2) -1
     (= u1 u2) 0
     (> u1 u2) 1))
-
-(comment
-  (hex-seq->uuid (uuid->hex-seq #uuid "a8b10dee-13a4-41f2-6eac-b60be801e95e"))
-  (hex-seq->uuid [10 8 11 1 0 13 14 14 1 3 10 4 4 1 15 2 6 14 10 12 11 6 0 11 14 8 0 1 14 9 5 14])
-  (make-squuid (js/Date. 0)))
