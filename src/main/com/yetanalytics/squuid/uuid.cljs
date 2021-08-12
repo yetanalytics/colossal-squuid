@@ -112,6 +112,13 @@
   [u1 u2]
   (> u1 u2))
 
+(defn compare-uuid
+  [u1 u2]
+  (cond
+    (< u1 u2) -1
+    (= u1 u2) 0
+    (> u1 u2) 1))
+
 (comment
   (hex-seq->uuid (uuid->hex-seq #uuid "a8b10dee-13a4-41f2-6eac-b60be801e95e"))
   (hex-seq->uuid [10 8 11 1 0 13 14 14 1 3 10 4 4 1 15 2 6 14 10 12 11 6 0 11 14 8 0 1 14 9 5 14])
