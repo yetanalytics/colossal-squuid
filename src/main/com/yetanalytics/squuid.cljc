@@ -17,7 +17,9 @@
 
 (s/def ::base-uuid uuid?)
 (s/def ::squuid uuid?)
-(s/def ::timestamp (s/and inst? #(<= 0 (inst-ms %) t/max-seconds)))
+(s/def ::timestamp
+  #?(:clj (partial instance? java.time.Instant)
+     :cljs (partial instance? js/Date)))
 
 ;; The atom is private so that only generate-squuid(*) can mutate it.
 ;; Note that merging Instant/EPOCH with v0 UUID returns the v0 UUID again.
@@ -76,7 +78,7 @@
   (:squuid (generate-squuid*)))
 
 (s/fdef time->uuid
-  :args (s/cat :ts ::timestamp)
+  :args (s/cat :ts (s/and inst? #(<= 0 (inst-ms %) t/max-seconds)))
   :ret ::squuid)
 
 (defn time->uuid
