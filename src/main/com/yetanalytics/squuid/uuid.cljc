@@ -80,7 +80,7 @@
          ;; most significant bits not maxed out
          (not (zero? (bit-and-not bit-mask-12 uuid-msb)))
          (UUID. (inc uuid-msb) uuid-lsb)
-        ;; oh no
+         ;; oh no
          :else
          (throw-inc-uuid-error u)))
 
@@ -151,7 +151,7 @@
             ts-hp (make-padding 8 ts-hs)
             ts-lp (make-padding 4 ts-ls)
             ;; Base UUID manips
-            u-str  (subs (.toString u) 15)
+            u-str (subs (.toString u) 15)
             ;; Cook some SQUUID
             raw-squuid    (str ts-hp ts-hs
                                "-"
