@@ -57,7 +57,7 @@
          (> u1 u2) 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Major functions
+;; Private helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn- throw-inc-uuid-error
@@ -65,6 +65,22 @@
   (throw (ex-info (str "Cannot increment UUID " u " any further.")
                   {:type ::exceeded-max-uuid-node
                    :uuid u})))
+
+(defn- throw-neg-timestamp
+  [ts]
+  (throw (ex-info (str "Timestamp " ts " occurs before January 1, 1970")
+                  {:type ::negative-timestamp
+                   :time ts})))
+
+(defn- ts->num
+  [ts]
+  (let [ts-num (inst-ms ts)]
+    (when-not (nat-int? ts-num) (throw-neg-timestamp ts))
+    ts-num))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Major functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn inc-uuid
   "Increment the UUID by one bit. Throws an exception if there are no available
@@ -125,11 +141,11 @@
    (make-squuid ts (rand-uuid)))
   ([ts ^UUID u]
    #?(:clj ; Use bit operations
-      (let [;; Base UUID
+      (let [;; Timestamp
+            ts-long   (ts->num ts)
+            ;; Base UUID
             uuid-msb  (.getMostSignificantBits u)
             uuid-lsb  (.getLeastSignificantBits u)
-            ;; Timestamp
-            ts-long   (inst-ms ts)
             ;; Putting it all together (and change version from v4 to v8)
             uuid-msb' (-> (bit-or (bit-shift-left ts-long 16)
                                   (bit-and bit-mask-16 uuid-msb))
@@ -143,7 +159,7 @@
       (let [make-padding
             (fn [max-len s] (join (repeat (- max-len (count s)) "0")))
             ;; Timestamp manips
-            ts'   (js/BigInt (inst-ms ts))
+            ts'   (js/BigInt (ts->num ts))
             ts-hi (bit-shift-right ts' bit-shift-16)
             ts-lo (bit-and ts' bit-mask-16)
             ts-hs (.toString ts-hi 16)
