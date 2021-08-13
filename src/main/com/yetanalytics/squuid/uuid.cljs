@@ -53,7 +53,7 @@
 (def ^:private bit-mask-16 (js/BigInt 0xFFFF))
 (def ^:private bit-shift-16 (js/BigInt 16))
 
-(defn- make-squuid
+(defn make-squuid
   ([ts]
    (make-squuid ts (rand-uuid)))
   ([ts u]
