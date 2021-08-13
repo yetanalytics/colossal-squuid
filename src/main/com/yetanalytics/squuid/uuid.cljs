@@ -224,5 +224,15 @@
   (time
    (dotimes [_ 1000]
      (:squuid (make-squuid-2 ct rv4))))
+  
+  ;; ~80 ms
+  (time
+   (dotimes [_ 1000]
+     (:squuid (make-squuid ct))))
+  
+  ;; ~7 ms
+  (time
+   (dotimes [_ 1000]
+     (:squuid (make-squuid-2 ct))))
 
   )
