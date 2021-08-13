@@ -1,8 +1,7 @@
 (ns com.yetanalytics.squuid
   (:require [clojure.spec.alpha :as s]
             [com.yetanalytics.squuid.uuid :as u]
-            [com.yetanalytics.squuid.time :as t])
-  (:import [java.util Date]))
+            [com.yetanalytics.squuid.time :as t]))
 
 ;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
 ;; for v8 UUIDS:
@@ -18,14 +17,16 @@
 
 (s/def ::base-uuid uuid?)
 (s/def ::squuid uuid?)
-(s/def ::timestamp inst?)
+(s/def ::timestamp
+  #?(:clj (partial instance? java.time.Instant)
+     :cljs (partial instance? js/Date)))
 
 ;; The atom is private so that only generate-squuid(*) can mutate it.
 ;; Note that merging Instant/EPOCH with v0 UUID returns the v0 UUID again.
 (def ^:private current-time-atom
-    (atom {:timestamp (t/zero-time)
-           :base-uuid (u/zero-uuid)
-           :squuid    (u/zero-uuid)}))
+  (atom {:timestamp t/zero-time
+         :base-uuid u/zero-uuid
+         :squuid    u/zero-uuid}))
 
 (s/fdef generate-squuid*
   :args (s/cat)
@@ -51,18 +52,18 @@
    longer occur."
   []
   (let [ts (t/current-time)
-        {:keys [timestamp]} @current-time-atom]
-    (if-not (t/after? ts timestamp)
-      ;; Timestamp clash - increment UUIDs
-      (swap! current-time-atom (fn [m]
-                                 (-> m
-                                     (update :base-uuid u/inc-uuid)
-                                     (update :squuid u/inc-uuid))))
+        {curr-ts :timestamp} @current-time-atom]
+    (if (t/before? curr-ts ts)
       ;; No timestamp clash - make new UUIDs
       (swap! current-time-atom (fn [m]
                                  (-> m
                                      (assoc :timestamp ts)
-                                     (merge (u/make-squuid ts))))))))
+                                     (merge (u/make-squuid ts)))))
+      ;; Timestamp clash - increment UUIDs
+      (swap! current-time-atom (fn [m]
+                                 (-> m
+                                     (update :base-uuid u/inc-uuid)
+                                     (update :squuid u/inc-uuid)))))))
 
 (s/fdef generate-squuid
   :args (s/cat)
@@ -77,13 +78,12 @@
   (:squuid (generate-squuid*)))
 
 (s/fdef time->uuid
-  :args (s/cat :ts inst?)
+  :args (s/cat :ts (s/and inst? #(<= 0 (inst-ms %) t/max-seconds)))
   :ret ::squuid)
 
 (defn time->uuid
   "Convert a timestamp to a UUID. The upper 48 bits represent
    the timestamp, while the lower 80 bits are `8FFF-8FFF-FFFFFFFFFFFF`."
   [ts]
-  (let [ts (if (instance? Date ts) (.toInstant ts) ts)]
-    (:squuid
-     (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF"))))
+  (:squuid
+   (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF")))
