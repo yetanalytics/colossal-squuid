@@ -1,9 +1,7 @@
 (ns com.yetanalytics.squuid
   (:require [clojure.spec.alpha :as s]
             [com.yetanalytics.squuid.uuid :as u]
-            [com.yetanalytics.squuid.time :as t])
-  #?(:clj
-     (:import [java.util Date])))
+            [com.yetanalytics.squuid.time :as t]))
 
 ;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
 ;; for v8 UUIDS:
@@ -24,9 +22,9 @@
 ;; The atom is private so that only generate-squuid(*) can mutate it.
 ;; Note that merging Instant/EPOCH with v0 UUID returns the v0 UUID again.
 (def ^:private current-time-atom
-    (atom {:timestamp (t/zero-time)
-           :base-uuid (u/zero-uuid)
-           :squuid    (u/zero-uuid)}))
+    (atom {:timestamp t/zero-time
+           :base-uuid u/zero-uuid
+           :squuid    u/zero-uuid}))
 
 (s/fdef generate-squuid*
   :args (s/cat)
@@ -85,7 +83,5 @@
   "Convert a timestamp to a UUID. The upper 48 bits represent
    the timestamp, while the lower 80 bits are `8FFF-8FFF-FFFFFFFFFFFF`."
   [ts]
-  (let [ts #?(:clj (if (instance? Date ts) (.toInstant ts) ts)
-              :cljs ts)]
-    (:squuid
-     (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF"))))
+  (:squuid
+   (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF")))
