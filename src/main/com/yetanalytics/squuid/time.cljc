@@ -5,14 +5,9 @@
   (str "Cannot generate SQUUID past August 2, 10889."
        " The timestamp would have exceeded 48 bits."))
 
-(def max-seconds 0x0000FFFFFFFFFFFF)
-
-(defn- assert-valid-time
-  [t]
-  (when-not (<= t max-seconds)
-    (throw (ex-info max-time-emsg
-                    {:type ::exceeded-max-time
-                     :time t}))))
+(def max-seconds
+  "The maximum underlying value of a 48-bit timestamp."
+  0x0000FFFFFFFFFFFF)
 
 (def zero-time
   "Return the timestamp corresponding to the beginning of the UNIX epoch,
@@ -25,7 +20,8 @@
   []
   (let [curr-seconds #?(:clj (System/currentTimeMillis)
                         :cljs (.now js/Date))]
-    (assert-valid-time curr-seconds)
+    (assert (<= curr-seconds max-seconds)
+            max-time-emsg)
     #?(:clj (Instant/ofEpochMilli curr-seconds)
        :cljs (js/Date. curr-seconds))))
 
