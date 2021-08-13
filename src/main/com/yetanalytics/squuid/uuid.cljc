@@ -2,8 +2,6 @@
   #?(:clj (:import [java.util UUID])
      :cljs (:require [clojure.string :refer [join]])))
 
-#?(:clj (set! *warn-on-reflection* true))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Private constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -177,5 +175,3 @@
             cooked-squuid (UUID. raw-squuid nil)]
         {:base-uuid u
          :squuid    cooked-squuid}))))
-
-#?(:clj (set! *warn-on-reflection* false))
