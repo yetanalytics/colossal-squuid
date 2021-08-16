@@ -9,7 +9,7 @@ A SQUUID is a Unique Universally Identifier, or UUID, whose value increases mono
 
 Our solution is to generate SQUUIDs where the first 48 bits are timestamp-based, while the remaining 80 bits are derived from a v4 base UUID. Abiding by RFC 4122, there are 6 reserved bits in a v4 UUID: 4 for the version (set at `0100`) and 2 for the variant (set at `11`). This means that there are 76 remaining random bits, which allows for about 18.9 sextillion random segments.
 
-The timestamp is coerced to millisecond resolution; specifically, it is the number of milliseconds since the start of the UNIX epoch on January 1, 1970. Due to the 48 bit maximum on the timestamp, the latest time supported is February 11, 10332; any millisecond-resolution timestamp generated after this date will have more than 48 bits.
+The timestamp is coerced to millisecond resolution; specifically, it is the number of milliseconds since the start of the UNIX epoch on January 1, 1970. Due to the 48 bit maximum on the timestamp, the latest time supported is August 2, 10889; any millisecond-resolution timestamp generated after this date will have more than 48 bits.
 
 If two SQUUIDs are generated in the same milliseconds, then instead of using completely different base UUIDs, the earlier SQUUID will be incremented by 1 to create the later SQUUID, ensuring monotonicity. In the very unlikely case the SQUUID cannot be incremented, an exception will be thrown.
 

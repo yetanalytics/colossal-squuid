@@ -67,7 +67,7 @@
    random segments.
    
    The timestamp is coerced to millisecond resolution. Due to the 48 bit
-   maximum on the timestamp, the latest time supported is February 11, 10332.
+   maximum on the timestamp, the latest time supported is August 2, 10889.
    
    In case that this function (or `generate-squuid*`) is called multiple times
    in the same millisecond, subsequent SQUUIDs are created by incrementing the
