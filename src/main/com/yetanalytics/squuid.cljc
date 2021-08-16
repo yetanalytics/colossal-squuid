@@ -38,18 +38,7 @@
    :base-uuid  The base v4 UUID that provides the lower 80 bits.
    :timestamp  The timestamp that provides the higher 48 bits.
    
-   The sequential UUIDs have 7 reserved bits from the RFC 4122 standard;
-   4 for the UUID version and 2 for the UUID variant. This leaves 74 random
-   bits, allowing for about 18.9 sextillion random segments.
-   
-   The timestamp is coerced to millisecond resolution. Due to the 48 bit
-   maximum on the timestamp, the latest time supported is February 11, 10332.
-   
-   In case that this function is called multiple times in the same millisecond,
-   subsequent SQUUIDs are created by incrementing the base UUID and thus the
-   random segment of the SQUUID. An exception is thrown in the unlikely case
-   where all 72 (non-variant) random bits are 1s and incrementing can no
-   longer occur."
+   See `generate-squuid` for more details."
   []
   (let [ts (t/current-time)
         {curr-ts :timestamp} @current-time-atom]
@@ -72,8 +61,19 @@
 (defn generate-squuid
   "Return a new v8 sequential UUID, or SQUUID. The most significant 48 bits
    are created from a timestamp representing the current time, which always
-   increments, enforcing sequentialness. See `generate-squuid*` for more
-   details."
+   increments monotonically. The least significant 80 bits are derived from
+   a base v4 UUID; since 6 bits are reserved (4 for the version and 2 for the
+   variant), this leaves 74 random bits, allowing for about 18.9 sextillion
+   random segments.
+   
+   The timestamp is coerced to millisecond resolution. Due to the 48 bit
+   maximum on the timestamp, the latest time supported is February 11, 10332.
+   
+   In case that this function (or `generate-squuid*`) is called multiple times
+   in the same millisecond, subsequent SQUUIDs are created by incrementing the
+   base UUID and thus the random segment of the SQUUID. An exception is thrown
+   in the unlikely case where all 74 random bits are 1s and incrementing can no
+   longer occur."
   []
   (:squuid (generate-squuid*)))
 
@@ -83,7 +83,8 @@
 
 (defn time->uuid
   "Convert a timestamp to a UUID. The upper 48 bits represent
-   the timestamp, while the lower 80 bits are `8FFF-8FFF-FFFFFFFFFFFF`."
+   the timestamp, while the lower 80 bits are fixed at
+   `8FFF-8FFF-FFFFFFFFFFFF`."
   [ts]
   (:squuid
    (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF")))
