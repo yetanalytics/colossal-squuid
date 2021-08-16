@@ -15,8 +15,12 @@
      (unchecked-long 0x000000000000FFFF)))
 
 #?(:clj
-   (def ^{:private true :const true} bit-mask-61
-     (unchecked-long 0x1FFFFFFFFFFFFFFF)))
+   (def ^{:private true :const true} min-uuid-lsb
+     (unchecked-long 0x8000000000000000)))
+
+#?(:clj
+   (def ^{:private true :const true} max-uuid-lsb
+     (unchecked-long 0xBFFFFFFFFFFFFFFF)))
 
 #?(:cljs
    (def ^:private bit-mask-16 (js/BigInt 0xFFFF)))
@@ -89,11 +93,12 @@
            uuid-lsb (.getLeastSignificantBits u)]
        (cond
          ;; least significant bits not maxed out
-         (not (zero? (bit-and-not bit-mask-61 uuid-lsb)))
+         ;; (Note that `<` isn't used since Java doesn't have unsigned ints)
+         (not= uuid-lsb max-uuid-lsb)
          (UUID. uuid-msb (inc uuid-lsb))
          ;; most significant bits not maxed out
-         (not (zero? (bit-and-not bit-mask-12 uuid-msb)))
-         (UUID. (inc uuid-msb) uuid-lsb)
+         (not= (bit-and bit-mask-12 uuid-msb) bit-mask-12)
+         (UUID. (inc uuid-msb) min-uuid-lsb)
          ;; oh no
          :else
          (throw-inc-uuid-error u)))
@@ -116,10 +121,10 @@
                    (ret-uuid u-char-arr))))
 
            ;; Variant hexes: 0x0 to 0xB
-           (= 17 i)
+           (= 19 i)
            (let [c (aget u-char-arr i)]
              (if (or (identical? "B" c) (identical? "b" c))
-               (do (aset u-char-arr i "0")
+               (do (aset u-char-arr i "8")
                    (recur (dec i)))
                (do (aset u-char-arr i (inc-char c))
                    (ret-uuid u-char-arr))))
