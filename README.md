@@ -29,3 +29,10 @@ Two functions are provided in the core API: `generate-squuid`, which generates a
 - The original approach of generating a 48-bit timestamp and merging it into a v4 UUID is taken from the Laravel PHP library's `orderedUuid` function: https://itnext.io/laravel-the-mysterious-ordered-uuid-29e7500b4f8
 - The idea of incrementing the least significant bit on a timestamp collision is taken from the ULID specification: https://github.com/ulid/spec
 - The draft RFC for v8 UUIDs: https://datatracker.ietf.org/doc/html/draft-peabody-dispatch-new-uuid-format
+
+## License
+
+Copyright © 2021 Yet Analtyics
+
+colossal-squuid is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/yetanalytics/colossal-squuid/blob/main/LICENSE) for the full license text
+
