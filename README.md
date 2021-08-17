@@ -3,7 +3,7 @@ Library for generating Sequential UUIDs, or SQUUIDs.
 
 ## Overview
 
-A SQUUID is a Universally Unique Identifier, or UUID, whose value increases monotonically over time. A SQUUID generated later will always have a higher value, both lexicographically and in terms of the underlying bits, than one generated earlier. This is in contrast to regular UUIDs (specifically version 4 UUIDs) that are completely random. However, it is also useful for generated SQUUIDs to maintain some degree of randomness, rather than being completely one-to-one with a particular timestamp.
+A SQUUID is a Universally Unique Identifier, or UUID, whose value increases monotonically over time. A SQUUID generated later will always have a higher value, both lexicographically and in terms of the underlying bits, than one generated earlier. This is in contrast to regular UUIDs (specifically version 4 UUIDs) that are completely random. However, it is also useful for generated SQUUIDs to maintain some degree of randomness to preserve uniqueness and reduce collision, rather than being completely one-to-one with a particular timestamp.
 
 ## Implementation
 
