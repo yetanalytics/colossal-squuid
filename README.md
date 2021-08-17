@@ -3,7 +3,7 @@ Library for generating sequential UUIDs, or SQUUIDs.
 
 ## Overview
 
-A SQUUID is a Unique Universally Identifier, or UUID, whose value increases monotonically over time, i.e. the a SQUUID generated later will always have a higher value (both lexicographically and in terms of the underlying bits) than one generated earlier. This is in contrast to regular UUIDs (specifically version 4 UUIDs) that are completely random. However, it is also useful for generated SQUUIDs to maintain some degree of randomness, rather than being completely one-to-one with a particular timestamp.
+A SQUUID is a Unique Universally Identifier, or UUID, whose value increases strictly monotonically over time, i.e. the a SQUUID generated later will always have a higher value (both lexicographically and in terms of the underlying bits) than one generated earlier. This is in contrast to regular UUIDs (specifically version 4 UUIDs) that are completely random. However, it is also useful for generated SQUUIDs to maintain some degree of randomness, rather than being completely one-to-one with a particular timestamp.
 
 ## Implementation
 
@@ -11,7 +11,7 @@ Our solution is to generate SQUUIDs where the first 48 bits are timestamp-based,
 
 The timestamp is coerced to millisecond resolution; specifically, it is the number of milliseconds since the start of the UNIX epoch on January 1, 1970. Due to the 48 bit maximum on the timestamp, the latest time supported is August 2, 10889; any millisecond-resolution timestamp generated after this date will have more than 48 bits.
 
-If two SQUUIDs are generated in the same milliseconds, then instead of using completely different base UUIDs, the earlier SQUUID will be incremented by 1 to create the later SQUUID, ensuring monotonicity. In the very unlikely case the SQUUID cannot be incremented, an exception will be thrown.
+If two SQUUIDs are generated in the same milliseconds, then instead of using completely different base UUIDs, the earlier SQUUID will be incremented by 1 to create the later SQUUID, ensuring strict monotonicity. In the very unlikely case the SQUUID cannot be incremented, an exception will be thrown.
 
 The generated SQUUIDs have a version number of 8, as that is the version suggested by the draft RFC on SQUUIDs (see "Background").
 

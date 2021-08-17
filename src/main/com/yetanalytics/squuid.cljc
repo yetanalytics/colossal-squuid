@@ -61,7 +61,7 @@
 (defn generate-squuid
   "Return a new v8 sequential UUID, or SQUUID. The most significant 48 bits
    are created from a timestamp representing the current time, which always
-   increments monotonically. The least significant 80 bits are derived from
+   increments in value. The least significant 80 bits are derived from
    a base v4 UUID; since 6 bits are reserved (4 for the version and 2 for the
    variant), this leaves 74 random bits, allowing for about 18.9 sextillion
    random segments.
