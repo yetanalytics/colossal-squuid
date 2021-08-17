@@ -32,7 +32,7 @@ Two functions are provided in the core API: `generate-squuid`, which generates a
 
 ## License
 
-Copyright © 2021 Yet Analtyics
+Copyright © 2021 Yet Analytics
 
 colossal-squuid is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/yetanalytics/colossal-squuid/blob/main/LICENSE) for the full license text
 
