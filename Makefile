@@ -9,3 +9,5 @@ test-clj:
 test-cljs:
 	clojure -M:test:runner-cljs
 
+ci: test-clj test-cljs
+
