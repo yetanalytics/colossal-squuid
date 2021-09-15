@@ -1,0 +1,33 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+  
+    strategy:
+      matrix:
+        target: [test-clj, test-cljs]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node # Unneeded for clj but keep to avoid code dupe
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Setup Java
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - name: Setup Clojure
+      uses: DeLaGuardo/setup-clojure@3.5
+      with:
+        cli: 1.10.3.943 # Clojure CLI based on tools.deps
+    
+    - name: Run make target $${{ matrix.target }}
+      run: make ${{ matrix.target }}
