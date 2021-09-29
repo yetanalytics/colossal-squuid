@@ -40,8 +40,7 @@
    
    See `generate-squuid` for more details."
   []
-  (let [ts #?(:clj (java.time.Instant/ofEpochMilli 123)
-              :cljs (t/current-time))]
+  (let [ts (t/current-time)]
     (swap! current-time-atom
            (fn [m]
              (if (t/before? (:timestamp m) ts)
