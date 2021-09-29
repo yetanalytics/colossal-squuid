@@ -40,19 +40,17 @@
    
    See `generate-squuid` for more details."
   []
-  (let [ts (t/current-time)
-        {curr-ts :timestamp} @current-time-atom]
-    (if (t/before? curr-ts ts)
-      ;; No timestamp clash - make new UUIDs
-      (swap! current-time-atom (fn [m]
-                                 (-> m
-                                     (assoc :timestamp ts)
-                                     (merge (u/make-squuid ts)))))
-      ;; Timestamp clash - increment UUIDs
-      (swap! current-time-atom (fn [m]
-                                 (-> m
-                                     (update :base-uuid u/inc-uuid)
-                                     (update :squuid u/inc-uuid)))))))
+  (let [ts #?(:clj (java.time.Instant/ofEpochMilli 123)
+              :cljs (t/current-time))]
+    (swap! current-time-atom
+           (fn [m]
+             (if (t/before? (:timestamp m) ts)
+               (-> m
+                   (assoc :timestamp ts)
+                   (merge (u/make-squuid ts)))
+               (-> m
+                   (update :base-uuid u/inc-uuid)
+                   (update :squuid u/inc-uuid)))))))
 
 (s/fdef generate-squuid
   :args (s/cat)
