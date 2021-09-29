@@ -28,6 +28,15 @@
          :base-uuid u/zero-uuid
          :squuid    u/zero-uuid}))
 
+(defn reset-all!
+  "Reset such that the starting timestamp and UUIDs are zeroed out. This
+   function is intended for use in development/testing."
+  []
+  (reset! current-time-atom
+          {:timestamp t/zero-time
+           :base-uuid u/zero-uuid
+           :squuid    u/zero-uuid}))
+
 (s/fdef generate-squuid*
   :args (s/cat)
   :ret (s/keys :req-un [::base-uuid ::timestamp ::squuid]))
