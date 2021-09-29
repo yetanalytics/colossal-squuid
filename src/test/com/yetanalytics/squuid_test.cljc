@@ -43,7 +43,8 @@
           squuid-seq' (sort (fn [u1 u2] (compare-uuid u1 u2)) squuid-seq)]
       (is (every? (fn [[u1 u2]] (zero? (compare-uuid u1 u2)))
                   (map (fn [u1 u2] [u1 u2]) squuid-seq squuid-seq')))))
-  #?(:clj ; Is it even possible to test this in cljs?
+  ;; Test for: https://github.com/yetanalytics/colossal-squuid/issues/10
+  #?(:clj ; Rip cljs and its single thread.
      (testing "squuid monotonicity (multi-threaded)"
        (with-redefs [t/current-time #(java.time.Instant/ofEpochMilli 100)]
          (is (->> (fn []
