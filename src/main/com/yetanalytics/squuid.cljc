@@ -28,6 +28,15 @@
          :base-uuid u/zero-uuid
          :squuid    u/zero-uuid}))
 
+(defn reset-all!
+  "Reset such that the starting timestamp and UUIDs are zeroed out. This
+   function is intended for use in development/testing."
+  []
+  (reset! current-time-atom
+          {:timestamp t/zero-time
+           :base-uuid u/zero-uuid
+           :squuid    u/zero-uuid}))
+
 (s/fdef generate-squuid*
   :args (s/cat)
   :ret (s/keys :req-un [::base-uuid ::timestamp ::squuid]))
@@ -40,19 +49,16 @@
    
    See `generate-squuid` for more details."
   []
-  (let [ts (t/current-time)
-        {curr-ts :timestamp} @current-time-atom]
-    (if (t/before? curr-ts ts)
-      ;; No timestamp clash - make new UUIDs
-      (swap! current-time-atom (fn [m]
-                                 (-> m
-                                     (assoc :timestamp ts)
-                                     (merge (u/make-squuid ts)))))
-      ;; Timestamp clash - increment UUIDs
-      (swap! current-time-atom (fn [m]
-                                 (-> m
-                                     (update :base-uuid u/inc-uuid)
-                                     (update :squuid u/inc-uuid)))))))
+  (let [ts (t/current-time)]
+    (swap! current-time-atom
+           (fn [m]
+             (if (t/before? (:timestamp m) ts)
+               (-> m
+                   (assoc :timestamp ts)
+                   (merge (u/make-squuid ts)))
+               (-> m
+                   (update :base-uuid u/inc-uuid)
+                   (update :squuid u/inc-uuid)))))))
 
 (s/fdef generate-squuid
   :args (s/cat)
