@@ -8,6 +8,18 @@ Library for generating Sequential UUIDs, or SQUUIDs.
 
 A SQUUID is a Universally Unique Identifier, or UUID, whose value increases strictly monotonically over time. A SQUUID generated later will always have a higher value, both lexicographically and in terms of the underlying bits, than one generated earlier. This is in contrast to regular UUIDs (specifically version 4 UUIDs) that are completely random. However, it is also useful for generated SQUUIDs to maintain some degree of randomness to preserve uniqueness and reduce collision, rather than being completely one-to-one with a particular timestamp.
 
+## Installation
+
+Add the following to the `:deps` map in your `deps.edn` file:
+```clojure
+com.yetanalytics/colossal-squuid
+{:git/url "https://github.com/yetanalytics/colossal-squuid.git"
+ :git/sha "2b96574407bfd55fa1deb21bf1e4572f6c91697a"
+ :git/tag "v0.1.1"
+ ;; Recommended in order to avoid unnecessary Clojure(script) deps
+ :exclusions [org.clojure/clojure org.clojure/clojurescript]}
+```
+
 ## Implementation
 
 Our solution is to generate SQUUIDs where the first 48 bits are timestamp-based, while the remaining 80 bits are derived from a v4 base UUID. Abiding by RFC 4122, there are 6 reserved bits in a v4 UUID: 4 for the version (set at `0100`) and 2 for the variant (set at `11`). This means that there are 74 remaining random bits, which allows for about 18.9 sextillion random segments.
