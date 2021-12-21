@@ -20,6 +20,7 @@ jobs:
     - name: Build JAR file
       run: make build VERSION=${{ steps.version.outputs.VERSION }}
     
+    # This is mainly a debug step that exists to ensure sanity checking
     - name: Publish artifact
       uses: actions/upload-artifact@v2
       with:

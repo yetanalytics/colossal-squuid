@@ -19,6 +19,12 @@
       <url>https://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
+  <developers>
+    <developer>
+      <name>Kelvin Qian</name>
+      <name>Milton Reder</name>
+    </developer>
+  </developers>
   <scm>
     <url>https://github.com/yetanalytics/colossal-squuid</url>
     <connection>scm:git:git://github.com/yetanalytics/colossal-squuid.git</connection>
@@ -32,34 +38,13 @@
       <url>https://clojars.org/repo</url>
     </repository>
   </distributionManagement>
-  <build>
-    <sourceDirectory>src/main</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/main</directory>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.6</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
   <repositories>
     <repository>
       <id>clojars</id>
       <url>https://repo.clojars.org/</url>
     </repository>
   </repositories>
+  <build>
+    <sourceDirectory>src/main</sourceDirectory>
+  </build>
 </project>
