@@ -10,14 +10,15 @@ A SQUUID is a Universally Unique Identifier, or UUID, whose value increases stri
 
 ## Installation
 
-Add the following to the `:deps` map in your `deps.edn` file:
 ```clojure
-com.yetanalytics/colossal-squuid
-{:git/url "https://github.com/yetanalytics/colossal-squuid.git"
- :git/sha "2b96574407bfd55fa1deb21bf1e4572f6c91697a"
- :git/tag "v0.1.1"
- ;; Recommended in order to avoid unnecessary Clojure(script) deps
- :exclusions [org.clojure/clojure org.clojure/clojurescript]}
+{com.yetanalytics/colossal-squuid {:mvn/version "0.1.2"}}
+```
+
+**Note:** By default colossal-squuid will bring in the Clojure and ClojureScript libraries as transitive dependencies. If you wish to exclude these from your project (e.g. because it is clj or cljs-only), you can use the `:exclusions` keyword:
+```clojure
+{com.yetanalytics/colossal-squuid {:mvn/version "0.1.2"
+                                   :exclusions [org.clojure/clojure
+                                                org.clojure/clojurescript]}}
 ```
 
 ## Implementation
