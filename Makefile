@@ -1,7 +1,7 @@
 .PHONY: clean test-clj test-cljs ci
 
 clean:
-	rm -rf cljs-test-runner-out
+	rm -rf cljs-test-runner-out target
 
 test-clj:
 	clojure -M:test:runner-clj
