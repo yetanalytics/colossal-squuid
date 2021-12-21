@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Special thanks to Tony Kay (@awkay) for the base POM file! -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.yetanalytics</groupId>
+  <artifactId>colossal-squuid</artifactId>
+  <packaging>jar</packaging>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  <name>colossal-squuid</name>
+  <description>A library for generating v8 sequential UUIDs</description>
+  <url>https://github.com/yetanalytics/colossal-squuid</url>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Kelvin Qian</name>
+    </developer>
+    <developer>
+      <name>Milton Reder</name>
+    </developer>
+  </developers>
+  <scm>
+    <url>https://github.com/yetanalytics/colossal-squuid</url>
+    <connection>scm:git:git://github.com/yetanalytics/colossal-squuid.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/yetanalytics/colossal-squuid.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+  <distributionManagement>
+    <repository>
+      <id>clojars</id>
+      <name>Clojars repository</name>
+      <url>https://clojars.org/repo</url>
+    </repository>
+  </distributionManagement>
+  <repositories>
+    <repository>
+      <id>clojars</id>
+      <url>https://repo.clojars.org/</url>
+    </repository>
+  </repositories>
+  <build>
+    <sourceDirectory>src/main</sourceDirectory>
+  </build>
+</project>
