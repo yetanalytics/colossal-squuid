@@ -5,3 +5,6 @@
 .cljs_node_repl/
 cljs-test-runner-out/
 
+.idea
+*.iml
+target

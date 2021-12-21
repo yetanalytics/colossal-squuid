@@ -1,10 +1,10 @@
 {:paths ["src/main"]
- :deps  {org.clojure/clojure       {:mvn/version "1.10.3"}
-         org.clojure/clojurescript {:mvn/version "1.10.879"}}
+ :deps  {org.clojure/clojure {:mvn/version "1.10.3"}}
  :aliases
  {:test
   {:extra-paths ["src/test"]
-   :extra-deps  {org.clojure/test.check
+   :extra-deps  {org.clojure/clojurescript {:mvn/version "1.10.879"}
+                 org.clojure/test.check
                  {:mvn/version "1.0.0"}
                  olical/cljs-test-runner
                  {:mvn/version "3.8.0"

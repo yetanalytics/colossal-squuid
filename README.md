@@ -2,7 +2,13 @@
 
 [![CI](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml/badge.svg)](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml)
 
+
 Library for generating Sequential UUIDs, or SQUUIDs.
+
+Fulcrologic Fork:
+
+This is an UNEDITED fork for of the original repository for the express purpose of published the library in clojars 
+so that transitive dependency resolution works (maven artifacts cannot find git sha deps releases).
 
 ## Overview
 
