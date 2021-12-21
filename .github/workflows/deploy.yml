@@ -9,10 +9,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
   
-    strategy:
-      matrix:
-        target: [test-clj, test-cljs]
-
     steps: 
     - name: Setup CD Environment
       uses: yetanalytics/actions/setup-env@v0
@@ -22,13 +18,13 @@ jobs:
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
     - name: Build JAR file
-      run: make build VERSION=${{ steps.version.output.VERSION }}
+      run: make build VERSION=${{ steps.version.outputs.VERSION }}
     
     - name: Publish artifact
       uses: actions/upload-artifact@v2
       with:
-        name: colossal-squuid-artifact-${{ steps.version.output.VERSION }}
-        path: target/colossal-squuid-${{ steps.version.output.VERSION }}.jar
+        name: colossal-squuid-artifact-${{ steps.version.outputs.VERSION }}
+        path: target/colossal-squuid-${{ steps.version.outputs.VERSION }}.jar
 
     # - name: Deploy to Clojars
     #   run: clojure -X:build deploy :lib com.yetanalytics/colossal-squuid :version ${{ steps.version.output.VERSION }}
