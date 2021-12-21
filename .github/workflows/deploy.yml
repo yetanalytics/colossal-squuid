@@ -6,7 +6,7 @@ on:
       - 'v*.*.*' # Enforce Semantic Versioning
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
   
     steps: 
@@ -26,8 +26,8 @@ jobs:
         name: colossal-squuid-artifact-${{ steps.version.outputs.VERSION }}
         path: target/colossal-squuid-${{ steps.version.outputs.VERSION }}.jar
 
-    # - name: Deploy to Clojars
-    #   run: clojure -X:build deploy :lib com.yetanalytics/colossal-squuid :version ${{ steps.version.output.VERSION }}
-    #   env:
-    #     CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
-    #     CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
+    - name: Deploy to Clojars
+      run: make deploy VERSION=${{ steps.version.outputs.VERSION }}
+      env:
+        CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+        CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
