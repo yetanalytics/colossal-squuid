@@ -19,7 +19,7 @@ jobs:
     
     - name: Extract version
       id: version
-      run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v*}
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
     - name: Build JAR file
       run: make build VERSION=${{ steps.version.output.VERSION }}
