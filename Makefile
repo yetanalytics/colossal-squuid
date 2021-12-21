@@ -11,3 +11,11 @@ test-cljs:
 
 ci: test-clj test-cljs
 
+# Default
+VERSION = LATEST
+
+build:
+	clojure -X:build jar :lib com.yetanalytics/colossal-squuid :version '"${VERSION}"'
+
+deploy:
+	clojure -X:build deploy :lib com.yetanalytics/colossal-squuid :version '"${VERSION}"'
