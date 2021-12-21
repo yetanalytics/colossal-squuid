@@ -10,7 +10,7 @@ A SQUUID is a Universally Unique Identifier, or UUID, whose value increases stri
 
 ## Installation
 
-If using deps.edn add the following line to your `:deps` alias:
+If using deps.edn add the following line to your `:deps` map:
 ```clojure
 com.yetanalytics/colossal-squuid {:mvn/version "0.1.3"}
 ```
