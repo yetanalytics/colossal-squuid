@@ -15,7 +15,7 @@ ci: test-clj test-cljs
 VERSION = LATEST
 
 build:
-	clojure -X:build jar :lib com.yetanalytics/colossal-squuid :version '"${VERSION}"'
+	clojure -X:build jar :lib com.yetanalytics/colossal-squuid :version '"${VERSION}"' :src-dirs '["src/main"]'
 
 deploy:
 	clojure -X:build deploy :lib com.yetanalytics/colossal-squuid :version '"${VERSION}"'
