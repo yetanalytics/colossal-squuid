@@ -17,7 +17,7 @@ jobs:
       uses: yetanalytics/actions/setup-env@v0
 
     - name: Build and deploy to Clojars
-      uses: yetanalytics/actions/deploy-clojars@c16f30a3513cab86df6e631fd13ef5d6d9fd277d
+      uses: yetanalytics/actions/deploy-clojars@23f05fa4be8ea05adfca002249ff40308f3c7124
       with:
           group-id: 'com.yetanalytics'
           artifact-id: 'colossal-squuid'
