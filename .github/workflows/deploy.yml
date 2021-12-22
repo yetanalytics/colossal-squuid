@@ -17,12 +17,13 @@ jobs:
       uses: yetanalytics/actions/setup-env@v0
 
     - name: Build and deploy to Clojars
-      uses: yetanalytics/actions/deploy-clojars@195837a7ed81be59db00aa02668cfa7d41150c8b
+      uses: yetanalytics/actions/deploy-clojars@2a63acaa098c42452af404b04108a6f42ee73ef6
       with:
           # group-id: 'com.yetanalytics'
           artifact-id: 'colossal-squuid'
           # src-dir: 'src/main'
           resource-dirs: '[]'
+          version: ${GITHUB_REF#refs\/tags\/v}
           # github-url: 'https://github.com/yetanalytics/colossal-squuid'
           # github-tag: 'HEAD'
           # github-conn: 'scm:git:git://github.com/yetanalytics/colossal-squuid.git'
