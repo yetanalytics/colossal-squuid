@@ -16,6 +16,10 @@ jobs:
     - name: Setup CD Environment
       uses: yetanalytics/actions/setup-env@v0
 
+    - name: Extract version
+      id: version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
+
     - name: Build and deploy to Clojars
       uses: yetanalytics/actions/deploy-clojars@2a63acaa098c42452af404b04108a6f42ee73ef6
       with:
@@ -23,15 +27,11 @@ jobs:
           artifact-id: 'colossal-squuid'
           # src-dir: 'src/main'
           resource-dirs: '[]'
-          version: ${GITHUB_REF#refs\/tags\/v}
+          version: ${{ steps.version.outputs.VERSION }} 
           # github-url: 'https://github.com/yetanalytics/colossal-squuid'
           # github-tag: 'HEAD'
           # github-conn: 'scm:git:git://github.com/yetanalytics/colossal-squuid.git'
           # github-dev-conn: 'scm:git:ssh://git@github.com/yetanalytics/colossal-squuid.git'
-
-    # - name: Extract version
-    #   id: version
-    #   run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
     # - name: Build JAR file
     #   run: make build VERSION=${{ steps.version.outputs.VERSION }}
