@@ -66,6 +66,6 @@ Where `M` is the version (always set to `8`) and `N` is the variant (which, sinc
 
 ## License
 
-Copyright © 2021 Yet Analytics, Inc.
+Copyright © 2021-2022 Yet Analytics, Inc.
 
 colossal-squuid is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/yetanalytics/colossal-squuid/blob/main/LICENSE) for the full license text
