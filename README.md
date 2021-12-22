@@ -1,6 +1,6 @@
 # colossal-squuid
 
-[![CI](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml/badge.svg)](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml)
+[![CI](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml/badge.svg)](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml) [![Clojars Project](https://img.shields.io/clojars/v/com.yetanalytics/colossal-squuid.svg)](https://clojars.org/com.yetanalytics/colossal-squuid)
 
 Library for generating Sequential UUIDs, or SQUUIDs.
 
@@ -10,21 +10,35 @@ A SQUUID is a Universally Unique Identifier, or UUID, whose value increases stri
 
 ## Installation
 
-If using deps.edn add the following line to your `:deps` map:
+If using deps.edn, add the following line to your `:deps` map:
 ```clojure
 com.yetanalytics/colossal-squuid {:mvn/version "0.1.3"}
 ```
+See the [Clojars page](https://clojars.org/com.yetanalytics/colossal-squuid) for how to install via Leiningen or other methods.
 
-If using Leiningen/Boot add the following dep:
+**Note:** By default colossal-squuid will bring in the Clojure and ClojureScript libraries as transitive dependencies. If you wish to exclude these from your project (e.g. because it is clj or cljs-only), you can use the `:exclusions` keyword (which works for both [deps.edn](https://simonrobson.net/2019/04/16/clojure-deps-with-exclusions.html) and [Leiningen](https://github.com/technomancy/leiningen/blob/master/sample.project.clj#L55)):
 ```clojure
-[com.yetanalytics/colossal-squuid "0.1.3"]
+:exclusions [org.clojure/clojure org.clojure/clojurescript]
 ```
 
-**Note:** By default colossal-squuid will bring in the Clojure and ClojureScript libraries as transitive dependencies. If you wish to exclude these from your project (e.g. because it is clj or cljs-only), you can use the `:exclusions` keyword:
+## API
+
+Three functions are provided in the `com.yetanalytics.squuid` namespace:
+- `generate-squuid` generates a SQUUID based off of a random base UUID and a timestamp representing the current time.
+- `generate-squuid*`, which returns a map containing the base UUID, the timestamp, and the SQUUID.
+- `time->uuid*` takes a timestamp and creates a SQUUID with a fixed (not random)  base UUID portion.
+
 ```clojure
-com.yetanalytics/colossal-squuid {:mvn/version "0.1.3"
-                                  :exclusions [org.clojure/clojure
-                                                org.clojure/clojurescript]}
+(generate-squuid)
+;; => #uuid "017de28f-5801-8c62-9ce9-cef70883794a"
+
+(generate-squuid*)
+;; => {:timestamp #inst "2021-12-22T14:33:04.769000000-00:00"
+;;     :base-uuid #uuid "85335e1f-9c1f-4c62-9ce9-cef70883794a"
+;;     :squuid    #uuid "017de28f-5801-8c62-9ce9-cef70883794a"}
+
+(time->uuid #inst "2021-12-22T14:33:04.769000000-00:00")
+;; => #uuid "017de28f-5801-8fff-8fff-ffffffffffff"
 ```
 
 ## Implementation
@@ -44,8 +58,6 @@ xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
 ```
 Where `M` is the version (always set to `8`) and `N` is the variant (which, since only the two most significant bits are fixed, can range from `8` to `B`).
 
-Two functions are provided in the core API: `generate-squuid`, which generates a SQUUID, and `generate-squuid*`, which returns a map containing the base UUID and the timestamp, as well as the SQUUID. In addition, `time->uuid` is provided to create a SQUUID from a timestamp with a fixed base UUID portion.
-
 ## Background
 
 - The original approach of generating a 48-bit timestamp and merging it into a v4 UUID is taken from the Laravel PHP library's `orderedUuid` function: https://itnext.io/laravel-the-mysterious-ordered-uuid-29e7500b4f8
@@ -54,7 +66,6 @@ Two functions are provided in the core API: `generate-squuid`, which generates a
 
 ## License
 
-Copyright © 2021 Yet Analytics
+Copyright © 2021-2022 Yet Analytics, Inc.
 
 colossal-squuid is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/yetanalytics/colossal-squuid/blob/main/LICENSE) for the full license text
-
