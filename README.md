@@ -21,6 +21,26 @@ See the [Clojars page](https://clojars.org/com.yetanalytics/colossal-squuid) for
 :exclusions [org.clojure/clojure org.clojure/clojurescript]
 ```
 
+## API
+
+Three functions are provided in the `com.yetanalytics.squuid` namespace:
+- `generate-squuid` generates a SQUUID based off of a random base UUID and a timestamp representing the current time.
+- `generate-squuid*`, which returns a map containing the base UUID, the timestamp, and the SQUUID.
+- `time->uuid*` takes a timestamp and creates a SQUUID with a fixed (not random)  base UUID portion.
+
+```clojure
+(generate-squuid)
+;; => #uuid "017de28f-5801-8c62-9ce9-cef70883794a"
+
+(generate-squuid*)
+;; => {:timestamp #inst "2021-12-22T14:33:04.769000000-00:00"
+;;     :base-uuid #uuid "85335e1f-9c1f-4c62-9ce9-cef70883794a"
+;;     :squuid    #uuid "017de28f-5801-8c62-9ce9-cef70883794a"}
+
+(time->uuid #inst "2021-12-22T14:33:04.769000000-00:00")
+;; => #uuid "017de28f-5801-8fff-8fff-ffffffffffff"
+```
+
 ## Implementation
 
 Our solution is to generate SQUUIDs where the first 48 bits are timestamp-based, while the remaining 80 bits are derived from a v4 base UUID. Abiding by RFC 4122, there are 6 reserved bits in a v4 UUID: 4 for the version (set at `0100`) and 2 for the variant (set at `11`). This means that there are 74 remaining random bits, which allows for about 18.9 sextillion random segments.
@@ -37,8 +57,6 @@ A graphical representation of the generated SQUUIDs is as follows:
 xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
 ```
 Where `M` is the version (always set to `8`) and `N` is the variant (which, since only the two most significant bits are fixed, can range from `8` to `B`).
-
-Two functions are provided in the core API: `generate-squuid`, which generates a SQUUID, and `generate-squuid*`, which returns a map containing the base UUID and the timestamp, as well as the SQUUID. In addition, `time->uuid` is provided to create a SQUUID from a timestamp with a fixed base UUID portion.
 
 ## Background
 
