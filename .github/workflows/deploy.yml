@@ -7,31 +7,39 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    uses: yetanalytics/actions/.github/workflows/deploy-clojars.yml@03b4040ae66133ed5a92a28acc0b83de3c1d56ee  
+    with:
+      artifact-id: 'colossal-squuid'
+      resource-dirs: '[]'
+      version: ${{ ${GITHUB_REF#refs\/tags\/v} }}
+      clojars-username: ${{ secrets.CLOJARS_USERNAME }}
+      clojars-token: ${{ secrets.CLOJARS_PASSWORD }}
+
+    # runs-on: ubuntu-latest
  
-    steps: 
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    # steps: 
+    # - name: Checkout repository
+    #   uses: actions/checkout@v2
 
-    - name: Setup CD Environment
-      uses: yetanalytics/actions/setup-env@v0
+    # - name: Setup CD Environment
+    #   uses: yetanalytics/actions/setup-env@v0
 
-    - name: Extract version
-      id: version
-      run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
+    # - name: Extract version
+    #   id: version
+    #   run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
-    - name: Build and deploy to Clojars
-      uses: yetanalytics/actions/deploy-clojars@2a63acaa098c42452af404b04108a6f42ee73ef6
-      with:
-          # group-id: 'com.yetanalytics'
-          artifact-id: 'colossal-squuid'
-          # src-dir: 'src/main'
-          resource-dirs: '[]'
-          version: ${{ steps.version.outputs.VERSION }} 
-          # github-url: 'https://github.com/yetanalytics/colossal-squuid'
-          # github-tag: 'HEAD'
-          # github-conn: 'scm:git:git://github.com/yetanalytics/colossal-squuid.git'
-          # github-dev-conn: 'scm:git:ssh://git@github.com/yetanalytics/colossal-squuid.git'
+    # - name: Build and deploy to Clojars
+    #   uses: yetanalytics/actions/deploy-clojars@2a63acaa098c42452af404b04108a6f42ee73ef6
+    #   with:
+    #       # group-id: 'com.yetanalytics'
+    #       artifact-id: 'colossal-squuid'
+    #       # src-dir: 'src/main'
+    #       resource-dirs: '[]'
+    #       version: ${{ steps.version.outputs.VERSION }} 
+    #       # github-url: 'https://github.com/yetanalytics/colossal-squuid'
+    #       # github-tag: 'HEAD'
+    #       # github-conn: 'scm:git:git://github.com/yetanalytics/colossal-squuid.git'
+    #       # github-dev-conn: 'scm:git:ssh://git@github.com/yetanalytics/colossal-squuid.git'
 
     # - name: Build JAR file
     #   run: make build VERSION=${{ steps.version.outputs.VERSION }}
