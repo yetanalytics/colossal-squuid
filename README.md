@@ -1,6 +1,6 @@
 # colossal-squuid
 
-[![CI](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml/badge.svg)](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml)
+[![CI](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml/badge.svg)](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml) [![Clojars Project](https://img.shields.io/clojars/v/com.yetanalytics/colossal-squuid.svg)](https://clojars.org/com.yetanalytics/colossal-squuid)
 
 Library for generating Sequential UUIDs, or SQUUIDs.
 
