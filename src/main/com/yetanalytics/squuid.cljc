@@ -1,4 +1,5 @@
 (ns com.yetanalytics.squuid
+  #?(:clj (:import [java.time Instant]))
   (:require [clojure.spec.alpha :as s]
             [com.yetanalytics.squuid.uuid :as u]
             [com.yetanalytics.squuid.time :as t]))
@@ -94,3 +95,20 @@
   [ts]
   (:squuid
    (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF")))
+
+(s/fdef uuid->time
+  :args (s/cat :uuid ::squuid)
+  :ret ::timestamp)
+
+(defn uuid->time
+  "Convert a previously generated UUID to its corresponding timestamp."
+  [uuid]
+  #?(:clj
+     (-> (.getMostSignificantBits uuid)
+         (bit-shift-right 16)
+         (Instant/ofEpochMilli))
+     :cljs
+     (let [s (str uuid)]
+       (-> (str (subs s 0 8) (subs s 9 13))
+           (js/parseInt 16)
+           (js/Date.)))))

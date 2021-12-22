@@ -20,11 +20,13 @@
   (testing "squuid gentests"
     (instrument [`squuid/generate-squuid*
                  `squuid/generate-squuid
-                 `squuid/time->uuid])
+                 `squuid/time->uuid
+                 `squuid/uuid->time])
     (is (every? #(-> % :clojure.spec.test.check/ret :pass?)
                 (check [`squuid/generate-squuid*
                         `squuid/generate-squuid
-                        `squuid/time->uuid])))))
+                        `squuid/time->uuid
+                        `squuid/uuid->time])))))
 
 (deftest squuid-monotone-test
   (testing "squuid monotonicity"
@@ -58,3 +60,9 @@
                       [new-u max-2]))
                   (repeatedly 30)
                   (every? (partial apply =))))))))
+
+(deftest uuid->time-test
+  (testing
+   (is (let [id (squuid/generate-squuid*)
+             time (squuid/uuid->time (:squuid id))]
+         (= (:timestamp id) time)))))
