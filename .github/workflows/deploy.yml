@@ -12,23 +12,35 @@ jobs:
     steps: 
     - name: Setup CD Environment
       uses: yetanalytics/actions/setup-env@v0
-    
-    - name: Extract version
-      id: version
-      run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
-    - name: Build JAR file
-      run: make build VERSION=${{ steps.version.outputs.VERSION }}
-    
-    # This is mainly a debug step that exists to ensure sanity checking
-    - name: Publish artifact
-      uses: actions/upload-artifact@v2
+    - name: Build and deploy to Clojars
+      uses: yetanalytics/actions/deploy-clojars@v2-SNAPSHOT
       with:
-        name: colossal-squuid-artifact-${{ steps.version.outputs.VERSION }}
-        path: target/colossal-squuid-${{ steps.version.outputs.VERSION }}.jar
+          group-id: 'com.yetanalytics'
+          artifact-id: 'colossal-squuid'
+          src-dir: 'src/main'
+          resource-dir: 'resources'
+          github-url: 'https://github.com/yetanalytics/colossal-squuid'
+          github-tag: 'HEAD'
+          github-conn: 'scm:git:git://github.com/yetanalytics/colossal-squuid.git'
+          github-dev-conn: 'scm:git:ssh://git@github.com/yetanalytics/colossal-squuid.git'
 
-    - name: Deploy to Clojars
-      run: make deploy VERSION=${{ steps.version.outputs.VERSION }}
-      env:
-        CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
-        CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
+    # - name: Extract version
+    #   id: version
+    #   run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
+
+    # - name: Build JAR file
+    #   run: make build VERSION=${{ steps.version.outputs.VERSION }}
+    
+    # # This is mainly a debug step that exists to ensure sanity checking
+    # - name: Publish artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: colossal-squuid-artifact-${{ steps.version.outputs.VERSION }}
+    #     path: target/colossal-squuid-${{ steps.version.outputs.VERSION }}.jar
+
+    # - name: Deploy to Clojars
+    #   run: make deploy VERSION=${{ steps.version.outputs.VERSION }}
+    #   env:
+    #     CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+    #     CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
