@@ -4,7 +4,8 @@
              [clojure.spec.test.alpha :refer [check instrument]]
              [com.yetanalytics.squuid :as squuid]
              [com.yetanalytics.squuid.uuid :refer [compare-uuid]]
-             [com.yetanalytics.squuid.time :as t])]
+             [com.yetanalytics.squuid.time :as t])
+            (:import [java.time Instant])]
       :cljs [(:require
               [goog.math]
               [clojure.test.check]
@@ -12,7 +13,8 @@
               [cljs.test :refer [deftest testing is]]
               [cljs.spec.test.alpha]
               [com.yetanalytics.squuid :as squuid]
-              [com.yetanalytics.squuid.uuid :refer [compare-uuid]])
+              [com.yetanalytics.squuid.uuid :refer [compare-uuid]]
+              [com.yetanalytics.squuid.time :as t])
              (:require-macros
               [cljs.spec.test.alpha :refer [check instrument]])]))
 
@@ -61,8 +63,30 @@
                   (repeatedly 30)
                   (every? (partial apply =))))))))
 
+(deftest time->uuid-test
+  (testing "Matching #inst and #uuid"
+    (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
+          inst #inst "2021-12-27T16:16:37.269Z"]
+      (is (= uuid (squuid/time->uuid inst))))))
+
 (deftest uuid->time-test
-  (testing
-   (is (let [id (squuid/generate-squuid*)
-             time (squuid/uuid->time (:squuid id))]
-         (= (:timestamp id) time)))))
+  (testing "confirm it matches with generate-squuid*"
+    (is (let [id (squuid/generate-squuid*)
+              time (squuid/uuid->time (:squuid id))]
+          (= (:timestamp id) time))))
+  (testing "uuid->time and time->uuid are 'inverses'"
+    (is (let [ts (t/current-time)]
+          (= ts (-> ts squuid/time->uuid squuid/uuid->time)))))
+  (testing "Matching #inst and #uuid"
+    #?(:clj
+       (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
+             inst #inst "2021-12-27T16:16:37.269Z"
+             java-inst (Instant/ofEpochMilli (inst-ms inst))]
+         (is (= java-inst (squuid/uuid->time uuid))))
+       (:cljs
+        (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
+              inst #inst "2021-12-27T16:16:37.269Z"]
+          (is (= inst (squuid/uuid->time uuid)))))))
+  (testing "input must be an uuid"
+    #?(:clj
+       (is (thrown? Exception (squuid/uuid->time "string uuid"))))))
