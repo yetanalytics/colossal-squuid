@@ -21,11 +21,12 @@ jobs:
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
     - name: Build and deploy to Clojars
-      uses: yetanalytics/actions/deploy-clojars@1f68c6d414e8d0986c6a6554e7d0efff847ab50c
+      uses: yetanalytics/actions/deploy-clojars@clojars
       with:
           artifact-id: 'colossal-squuid'
           resource-dirs: '[]'
           version: ${{ steps.version.outputs.VERSION }}
           clojars-username: ${{ secrets.CLOJARS_USERNAME }}
-          clojars-password: ${{ secrets.CLOJARS_PASSWORD }}
+          clojars-deploy-token: ${{ secrets.CLOJARS_PASSWORD }}
+          publish: false
 
