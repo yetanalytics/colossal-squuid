@@ -28,5 +28,4 @@ jobs:
           version: ${{ steps.version.outputs.VERSION }}
           clojars-username: ${{ secrets.CLOJARS_USERNAME }}
           clojars-deploy-token: ${{ secrets.CLOJARS_PASSWORD }}
-          publish: false
 
