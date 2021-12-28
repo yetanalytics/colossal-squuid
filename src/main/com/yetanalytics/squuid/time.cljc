@@ -29,3 +29,10 @@
   "Does `time1` occur strictly before `time2`?"
   #?(:clj ([^Instant time1 ^Instant time2] (.isBefore time1 time2))
      :cljs ([time1 time2] (< time1 time2))))
+
+#?(:clj
+   (defn ms->Instant
+     "Convenience function returning a java.time.Instant object 
+      given `ms` from the beginning of the UNIX epoch."
+     [ms]
+     (Instant/ofEpochMilli ms)))

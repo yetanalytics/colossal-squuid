@@ -1,8 +1,7 @@
 (ns com.yetanalytics.squuid
   (:require [clojure.spec.alpha :as s]
             [com.yetanalytics.squuid.uuid :as u]
-            [com.yetanalytics.squuid.time :as t])
-  #?(:clj (:import [java.time Instant])))
+            [com.yetanalytics.squuid.time :as t]))
 
 ;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
 ;; for v8 UUIDS:
@@ -102,15 +101,15 @@
   :ret ::timestamp)
 
 (defn uuid->time
-  "Convert a previously generated `uuid` to its corresponding timestamp."
+  "Convert a previously generated `uuid` to its corresponding timestamp.
+   Returns a java.time.Instant object in Clojure, #inst in ClojureScript."
   [uuid]
   (assert (uuid? uuid))
   #?(:clj
-     (-> (.getMostSignificantBits uuid)
-         (bit-shift-right 16)
-         (Instant/ofEpochMilli))
+     (-> uuid
+         (u/extract-ts-bytes)
+         (t/ms->Instant))
      :cljs
-     (let [s (str uuid)]
-       (-> (str (subs s 0 8) (subs s 9 13))
-           (js/parseInt 16)
-           (js/Date.)))))
+     (-> uuid
+         (u/extract-ts-bytes)
+         (js/Date.))))

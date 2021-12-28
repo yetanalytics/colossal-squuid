@@ -29,6 +29,8 @@ Four functions are provided in the `com.yetanalytics.squuid` namespace:
 - `time->uuid` takes a timestamp and creates a SQUUID with a fixed (not random)  base UUID portion.
 - `uuid->time` takes a SQUUID and returns its corresponding timestamp.
 
+**Note:** `generate-squuid*` and `uuid->time` return timestamps as `java.time.Instant` instances in Clojure, `#inst` in ClojureScript.
+
 ```clojure
 (generate-squuid)
 ;; => #uuid "017de28f-5801-8c62-9ce9-cef70883794a"

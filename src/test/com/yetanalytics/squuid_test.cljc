@@ -4,8 +4,7 @@
              [clojure.spec.test.alpha :refer [check instrument]]
              [com.yetanalytics.squuid :as squuid]
              [com.yetanalytics.squuid.uuid :refer [compare-uuid]]
-             [com.yetanalytics.squuid.time :as t])
-            (:import [java.time Instant])]
+             [com.yetanalytics.squuid.time :as t])]
       :cljs [(:require
               [goog.math]
               [clojure.test.check]
@@ -88,7 +87,7 @@
     #?(:clj
        (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
              inst #inst "2021-12-27T16:16:37.269Z"
-             java-inst (Instant/ofEpochMilli (inst-ms inst))]
+             java-inst (t/ms->Instant (inst-ms inst))]
          (is (= java-inst (squuid/uuid->time uuid))))
        (:cljs
         (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
