@@ -89,4 +89,6 @@
           (is (= inst (squuid/uuid->time uuid)))))))
   (testing "input must be an uuid"
     #?(:clj
-       (is (thrown? Exception (squuid/uuid->time "string uuid"))))))
+       (is (thrown? Exception (squuid/uuid->time "string uuid")))
+       :cljs
+       (is (thrown-with-msg? js/Error #"Assert failed" (squuid/uuid->time "string uuid"))))))
