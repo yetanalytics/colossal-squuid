@@ -65,8 +65,8 @@
          (bit-shift-right 16))
      :cljs
      (let [s (str uuid)]
-       (-> (str (subs s 0 8) (subs s 9 13)))
-       (js/parseInt 16))))
+       (-> (str (subs s 0 8) (subs s 9 13))
+           (js/parseInt 16)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Private helpers
