@@ -93,6 +93,7 @@
    the timestamp, while the lower 80 bits are fixed at
    `8FFF-8FFF-FFFFFFFFFFFF`."
   [ts]
+  (assert (inst? ts))
   (:squuid
    (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF")))
 

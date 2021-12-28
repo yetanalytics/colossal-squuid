@@ -67,7 +67,14 @@
   (testing "Matching #inst and #uuid"
     (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
           inst #inst "2021-12-27T16:16:37.269Z"]
-      (is (= uuid (squuid/time->uuid inst))))))
+      (is (= uuid (squuid/time->uuid inst)))))
+  (testing "input must be #inst"
+    #?(:clj
+       (is (thrown? Exception
+                    (squuid/time->uuid "2021-12-27T16:16:37.269Z")))
+       :cljs
+       (is (thrown-with-msg? js/Error #"Assert failed"
+                             (squuid/time->uuid "2021-12-27T16:16:37.269Z"))))))
 
 (deftest uuid->time-test
   (testing "confirm it matches with generate-squuid*"
