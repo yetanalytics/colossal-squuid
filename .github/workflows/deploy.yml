@@ -14,14 +14,14 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Setup CD Environment
-      uses: yetanalytics/actions/setup-env@v0
+      uses: yetanalytics/actions/setup-env@v0.0.1
 
     - name: Extract version
       id: version
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
     - name: Build and deploy to Clojars
-      uses: yetanalytics/actions/deploy-clojars@clojars
+      uses: yetanalytics/actions/deploy-clojars@v0.0.1
       with:
           artifact-id: 'colossal-squuid'
           resource-dirs: '[]'
