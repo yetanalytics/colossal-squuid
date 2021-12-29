@@ -8,27 +8,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-  
+ 
     steps: 
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
     - name: Setup CD Environment
-      uses: yetanalytics/actions/setup-env@v0
-    
+      uses: yetanalytics/actions/setup-env@v0.0.2
+
     - name: Extract version
       id: version
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
-    - name: Build JAR file
-      run: make build VERSION=${{ steps.version.outputs.VERSION }}
-    
-    # This is mainly a debug step that exists to ensure sanity checking
-    - name: Publish artifact
-      uses: actions/upload-artifact@v2
+    - name: Build and deploy to Clojars
+      uses: yetanalytics/actions/deploy-clojars@v0.0.2
       with:
-        name: colossal-squuid-artifact-${{ steps.version.outputs.VERSION }}
-        path: target/colossal-squuid-${{ steps.version.outputs.VERSION }}.jar
+          artifact-id: 'colossal-squuid'
+          resource-dirs: '[]'
+          version: ${{ steps.version.outputs.VERSION }}
+          clojars-username: ${{ secrets.CLOJARS_USERNAME }}
+          clojars-deploy-token: ${{ secrets.CLOJARS_PASSWORD }}
 
-    - name: Deploy to Clojars
-      run: make deploy VERSION=${{ steps.version.outputs.VERSION }}
-      env:
-        CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
-        CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
