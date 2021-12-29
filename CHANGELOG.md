@@ -10,7 +10,7 @@
 
 ## 0.1.1
 
-- Fix issue #10 where strict monotonicity was not enforced on multiple threads. ([#11](https://github.com/yetanalytics/colossal-squuid/pull/11))
+- Fix [issue](https://github.com/yetanalytics/colossal-squuid/issues/10) where strict monotonicity was not enforced on multiple threads. ([#11](https://github.com/yetanalytics/colossal-squuid/pull/11))
 
 ## 0.1.0
 
