@@ -21,7 +21,7 @@ jobs:
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs\/tags\/v}
 
     - name: Build and deploy to Clojars
-      uses: yetanalytics/actions/deploy-clojars@v0.0.1
+      uses: yetanalytics/actions/deploy-clojars@v0.0.2
       with:
           artifact-id: 'colossal-squuid'
           resource-dirs: '[]'
