@@ -59,6 +59,7 @@
          (> u1 u2) 1))))
 
 (defn extract-ts-bytes
+  "Extracts the first 48 bits of a SQUUID corresponding to a timestamp."
   [^UUID uuid]
   #?(:clj
      (-> (.getMostSignificantBits uuid)

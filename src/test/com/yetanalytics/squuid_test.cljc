@@ -72,8 +72,8 @@
        (is (thrown? Exception
                     (squuid/time->uuid "2021-12-27T16:16:37.269Z")))
        :cljs
-       (is (thrown-with-msg? js/Error #"Assert failed"
-                             (squuid/time->uuid "2021-12-27T16:16:37.269Z"))))))
+       (is (thrown? js/Error
+                    (squuid/time->uuid "2021-12-27T16:16:37.269Z"))))))
 
 (deftest uuid->time-test
   (testing "confirm it matches with generate-squuid*"
@@ -89,12 +89,12 @@
              inst #inst "2021-12-27T16:16:37.269Z"
              java-inst (t/ms->Instant (inst-ms inst))]
          (is (= java-inst (squuid/uuid->time uuid))))
-       (:cljs
-        (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
-              inst #inst "2021-12-27T16:16:37.269Z"]
-          (is (= inst (squuid/uuid->time uuid)))))))
+       :cljs
+       (let [uuid #uuid "017dfcad-ef95-8fff-8fff-ffffffffffff"
+             inst #inst "2021-12-27T16:16:37.269Z"]
+         (is (= inst (squuid/uuid->time uuid))))))
   (testing "input must be an uuid"
     #?(:clj
        (is (thrown? Exception (squuid/uuid->time "string uuid")))
        :cljs
-       (is (thrown-with-msg? js/Error #"Assert failed" (squuid/uuid->time "string uuid"))))))
+       (is (thrown? js/Error (squuid/uuid->time "string uuid"))))))

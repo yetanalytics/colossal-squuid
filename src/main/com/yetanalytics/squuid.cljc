@@ -1,5 +1,6 @@
 (ns com.yetanalytics.squuid
   (:require [clojure.spec.alpha :as s]
+            [clojure.spec.gen.alpha :as sgen]
             [com.yetanalytics.squuid.uuid :as u]
             [com.yetanalytics.squuid.time :as t]))
 
@@ -18,8 +19,11 @@
 (s/def ::base-uuid uuid?)
 (s/def ::squuid uuid?)
 (s/def ::timestamp
-  #?(:clj (partial instance? java.time.Instant)
-     :cljs (partial instance? js/Date)))
+  #?(:clj (s/with-gen (partial instance? java.time.Instant)
+            #(sgen/fmap (fn [ts] (t/ms->Instant (inst-ms ts)))
+                        (s/gen inst?)))
+     :cljs (s/with-gen (partial instance? js/Date)
+             #(s/gen inst?))))
 
 ;; The atom is private so that only generate-squuid(*) can mutate it.
 ;; Note that merging Instant/EPOCH with v0 UUID returns the v0 UUID again.
