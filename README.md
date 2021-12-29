@@ -22,6 +22,8 @@ See the [Clojars page](https://clojars.org/com.yetanalytics/colossal-squuid) for
 :exclusions [org.clojure/clojure org.clojure/clojurescript]
 ```
 
+For earlier releases, see the [Clojars page](https://clojars.org/com.yetanalytics/colossal-squuid), as well as the [changelog](CHANGELOG.md) for information about each release.
+
 ## API
 
 Three functions are provided in the `com.yetanalytics.squuid` namespace:
@@ -64,6 +66,10 @@ Where `M` is the version (always set to `8`) and `N` is the variant (which, sinc
 - The original approach of generating a 48-bit timestamp and merging it into a v4 UUID is taken from the Laravel PHP library's `orderedUuid` function: https://itnext.io/laravel-the-mysterious-ordered-uuid-29e7500b4f8
 - The idea of incrementing the least significant bit on a timestamp collision is taken from the ULID specification: https://github.com/ulid/spec
 - The draft RFC for v8 UUIDs: https://datatracker.ietf.org/doc/html/draft-peabody-dispatch-new-uuid-format
+
+## Contribution
+
+Before contributing to this project, please read the [Contribution Guidelines](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
