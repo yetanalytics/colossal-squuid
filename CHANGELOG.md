@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.1.4 - TBD
+## Unreleased
 
 - Add `uuid->time` function. (#18)
 - Update CD workflow such that Clojars deployment occurs in a separate GitHub Action. (#17)
