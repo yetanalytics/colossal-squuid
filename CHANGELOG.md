@@ -1,10 +1,11 @@
 # Change Log
 
-## Unreleased
+## 0.1.4
 
 - Update README by adding an API section. ([#16](https://github.com/yetanalytics/colossal-squuid/pull/16))
 - Update CD workflow such that Clojars deployment occurs in a separate GitHub Action. ([#17](https://github.com/yetanalytics/colossal-squuid/pull/17))
 - Add changelog, contributing guidelines, and code of conduct. ([#19](https://github.com/yetanalytics/colossal-squuid/pull/19))
+- Add the `uuid->time` API function to extract the timestamp from a SQUUID. ([#18](https://github.com/yetanalytics/colossal-squuid/pull/18))
 
 ## 0.1.3
 
