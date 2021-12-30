@@ -1,7 +1,8 @@
 (ns com.yetanalytics.squuid
   (:require [clojure.spec.alpha :as s]
             [com.yetanalytics.squuid.uuid :as u]
-            [com.yetanalytics.squuid.time :as t]))
+            [com.yetanalytics.squuid.time :as t]
+            #?(:clj [clojure.spec.gen.alpha :as sgen])))
 
 ;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
 ;; for v8 UUIDS:
@@ -18,8 +19,11 @@
 (s/def ::base-uuid uuid?)
 (s/def ::squuid uuid?)
 (s/def ::timestamp
-  #?(:clj (partial instance? java.time.Instant)
-     :cljs (partial instance? js/Date)))
+  #?(:clj (s/with-gen (partial instance? java.time.Instant)
+            #(sgen/fmap (fn [ts] (t/ms->Instant (inst-ms ts)))
+                        (s/gen inst?)))
+     :cljs (s/with-gen (partial instance? js/Date)
+             #(s/gen inst?))))
 
 ;; The atom is private so that only generate-squuid(*) can mutate it.
 ;; Note that merging Instant/EPOCH with v0 UUID returns the v0 UUID again.
@@ -92,5 +96,24 @@
    the timestamp, while the lower 80 bits are fixed at
    `8FFF-8FFF-FFFFFFFFFFFF`."
   [ts]
+  (assert (inst? ts))
   (:squuid
    (u/make-squuid ts #uuid "00000000-0000-4FFF-8FFF-FFFFFFFFFFFF")))
+
+(s/fdef uuid->time
+  :args (s/cat :uuid ::squuid)
+  :ret ::timestamp)
+
+(defn uuid->time
+  "Convert a previously generated `uuid` to its corresponding timestamp.
+   Returns a java.time.Instant object in Clojure, #inst in ClojureScript."
+  [uuid]
+  (assert (uuid? uuid))
+  #?(:clj
+     (-> uuid
+         (u/extract-ts-bytes)
+         (t/ms->Instant))
+     :cljs
+     (-> uuid
+         (u/extract-ts-bytes)
+         (js/Date.))))

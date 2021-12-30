@@ -26,10 +26,13 @@ For earlier releases, see the [Clojars page](https://clojars.org/com.yetanalytic
 
 ## API
 
-Three functions are provided in the `com.yetanalytics.squuid` namespace:
+Four functions are provided in the `com.yetanalytics.squuid` namespace:
 - `generate-squuid` generates a SQUUID based off of a random base UUID and a timestamp representing the current time.
 - `generate-squuid*`, which returns a map containing the base UUID, the timestamp, and the SQUUID.
-- `time->uuid*` takes a timestamp and creates a SQUUID with a fixed (not random)  base UUID portion.
+- `time->uuid` takes a timestamp and creates a SQUUID with a fixed (not random)  base UUID portion.
+- `uuid->time` takes a SQUUID and returns its corresponding timestamp.
+
+**Note:** `generate-squuid*` and `uuid->time` return timestamps as `java.time.Instant` instances in Clojure, `#inst` in ClojureScript.
 
 ```clojure
 (generate-squuid)
@@ -42,6 +45,9 @@ Three functions are provided in the `com.yetanalytics.squuid` namespace:
 
 (time->uuid #inst "2021-12-22T14:33:04.769000000-00:00")
 ;; => #uuid "017de28f-5801-8fff-8fff-ffffffffffff"
+
+(uuid->time #uuid "017de28f-5801-8fff-8fff-ffffffffffff")
+;; => #inst "2021-12-22T14:33:04.769000000-00:00"
 ```
 
 ## Implementation
