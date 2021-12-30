@@ -1,8 +1,8 @@
 (ns com.yetanalytics.squuid
   (:require [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as sgen]
             [com.yetanalytics.squuid.uuid :as u]
-            [com.yetanalytics.squuid.time :as t]))
+            [com.yetanalytics.squuid.time :as t]
+            #?(:clj [clojure.spec.gen.alpha :as sgen])))
 
 ;; This library generates sequential UUIDs, or SQUUIDs, based on the draft RFC
 ;; for v8 UUIDS:
