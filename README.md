@@ -13,7 +13,7 @@ A SQUUID is a Universally Unique Identifier, or UUID, whose value increases stri
 
 If using deps.edn, add the following line to your `:deps` map:
 ```clojure
-com.yetanalytics/colossal-squuid {:mvn/version "0.1.4"}
+com.yetanalytics/colossal-squuid {:mvn/version "0.1.5"}
 ```
 See the [Clojars page](https://clojars.org/com.yetanalytics/colossal-squuid) for how to install via Leiningen or other methods.
 

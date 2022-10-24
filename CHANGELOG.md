@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.1.5
+- Update GitHub CI and CD to remove deprecation warnings.
+
 ## 0.1.4
 
 - Update README by adding an API section. ([#16](https://github.com/yetanalytics/colossal-squuid/pull/16))
