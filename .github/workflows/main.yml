@@ -11,6 +11,9 @@ jobs:
         target: [test-clj, test-cljs]
 
     steps: 
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
     - name: Setup CI Environment
       uses: yetanalytics/actions/setup-env@v0.0.4-test
 
