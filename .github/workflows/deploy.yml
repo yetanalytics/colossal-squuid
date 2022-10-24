@@ -11,17 +11,17 @@ jobs:
  
     steps: 
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup CD Environment
-      uses: yetanalytics/actions/setup-env@v0.0.2
+      uses: yetanalytics/actions/setup-env@v0.0.4-test5
 
     - name: Extract version
       id: version
       run: echo version=${GITHUB_REF#refs\/tags\/v} >> $GITHUB_OUTPUT
 
     - name: Build and deploy to Clojars
-      uses: yetanalytics/actions/deploy-clojars@v0.0.2
+      uses: yetanalytics/actions/deploy-clojars@v0.0.4-test5
       with:
           artifact-id: 'colossal-squuid'
           resource-dirs: '[]'
