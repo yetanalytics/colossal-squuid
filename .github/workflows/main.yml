@@ -17,5 +17,5 @@ jobs:
     - name: Setup CI Environment
       uses: yetanalytics/actions/setup-env@v0.0.4-test5
 
-    - name: Run make target $${{ matrix.target }}
+    - name: Run make target ${{ matrix.target }}
       run: make ${{ matrix.target }}
