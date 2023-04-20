@@ -1,5 +1,7 @@
 # colossal-squuid
 
+<img src="logo/logo.svg" alt="Colossal Squuid Logo"/>
+
 [![CI](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml/badge.svg)](https://github.com/yetanalytics/colossal-squuid/actions/workflows/main.yml) [![Clojars Project](https://img.shields.io/clojars/v/com.yetanalytics/colossal-squuid.svg)](https://clojars.org/com.yetanalytics/colossal-squuid) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-5e0b73.svg)](CODE_OF_CONDUCT.md)
 
 
@@ -79,6 +81,6 @@ Before contributing to this project, please read the [Contribution Guidelines](C
 
 ## License
 
-Copyright © 2021-2022 Yet Analytics, Inc.
+Copyright © 2021-2023 Yet Analytics, Inc.
 
 colossal-squuid is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/yetanalytics/colossal-squuid/blob/main/LICENSE) for the full license text
