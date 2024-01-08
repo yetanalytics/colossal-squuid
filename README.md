@@ -81,6 +81,6 @@ Before contributing to this project, please read the [Contribution Guidelines](C
 
 ## License
 
-Copyright © 2021-2023 Yet Analytics, Inc.
+Copyright © 2021-2024 Yet Analytics, Inc.
 
 colossal-squuid is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/yetanalytics/colossal-squuid/blob/main/LICENSE) for the full license text
