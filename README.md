@@ -75,6 +75,22 @@ Where `M` is the version (always set to `8`) and `N` is the variant (which, sinc
 - The idea of incrementing the least significant bit on a timestamp collision is taken from the ULID specification: https://github.com/ulid/spec
 - The draft RFC for v8 UUIDs: https://datatracker.ietf.org/doc/html/draft-peabody-dispatch-new-uuid-format
 
+## Dependency vulnerability tracking
+
+The `Deps` workflow submits the library's Maven dependency tree to GitHub's
+dependency graph on pushes to `main` and can also be run manually. Dependabot
+uses this graph to check for known vulnerabilities.
+
+`make dependency-pom` generates `target/dependency-submission/pom.xml` from the
+base dependencies in `deps.edn`, excluding local user configuration. The
+generated POM is ignored by Git; the committed root `pom.xml` retains its
+publishing metadata. The snapshot is associated with `deps.edn` in GitHub.
+
+Coverage includes Clojure, ClojureScript, and their transitive Maven dependencies.
+It excludes the `:test` alias, including `test.check`, `cljs-test-runner`, and the
+Git-based Cognitect test runner. The test runner aliases do not add library
+dependencies. Test tooling requires separate coverage.
+
 ## Contribution
 
 Before contributing to this project, please read the [Contribution Guidelines](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
