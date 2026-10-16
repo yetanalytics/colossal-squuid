@@ -1,6 +1,7 @@
 {:paths ["src/main"]
- :deps  {org.clojure/clojure       {:mvn/version "1.10.3"}
-         org.clojure/clojurescript {:mvn/version "1.10.879"}}
+ :deps  {org.clojure/clojure       {:mvn/version "1.11.4"}
+         org.clojure/clojurescript {:mvn/version "1.10.879"}
+         com.fasterxml.jackson.core/jackson-core {:mvn/version "2.18.11"}}
  :aliases
  {:test
   {:extra-paths ["src/test"]
